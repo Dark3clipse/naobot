@@ -11,7 +11,7 @@ from cmath import *
 import time
 
 #initialize the robot
-nao.InitProxy("127.0.0.1")
+nao.InitProxy("127.0.0.1", [])
 nao.InitPose(.5, .8)
 
 #possible states
@@ -36,7 +36,16 @@ waiting_area = 0
 
 while(True):
     if state == STATE_SCANFACE:
-        #i have changed something
+        #Start the face detection
+        [detected, timestamp, facePosition] = nao.DetectFace(True, 100)
+        if detected == True:
+            print("Face detected at t="+timestamp+", position"+facePosition)
+            
+            #nao.MoveHead(yaw_val, pitch_val, isAbsolute, post, timeLists)
+            #nav_position = 
+            #nav_angle = 
+            nav_personal = True
+            state = STATE_NAVIGATE
         pass
     
     elif state == STATE_NAVIGATE:
