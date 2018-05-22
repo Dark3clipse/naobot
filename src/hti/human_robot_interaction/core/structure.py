@@ -3,7 +3,6 @@ Created on 24 Apr 2018
 
 @author: Sophia
 '''
-
 import nao_nocv_2_0 as nao
 import naoqi
 #import pykalman as klib
@@ -12,7 +11,8 @@ import naoqi
 import time
 
 #initialize the robot
-nao.InitProxy("127.0.0.1")
+nao.InitProxy("127.0.0.1", [])
+nao.InitPose(.5, .8)
 
 #possible states
 STATE_SCANFACE = 0
@@ -56,7 +56,16 @@ def detectSpeech():
 
 while(go == True):
     if state == STATE_SCANFACE:
-        
+        #Start the face detection
+        [detected, timestamp, facePosition] = nao.DetectFace(True, 100)
+        if detected == True:
+            print("Face detected at t="+timestamp+", position"+facePosition)
+            
+            #nao.MoveHead(yaw_val, pitch_val, isAbsolute, post, timeLists)
+            #nav_position = 
+            #nav_angle = 
+            nav_personal = True
+            state = STATE_NAVIGATE
         pass
     
     elif state == STATE_NAVIGATE:
