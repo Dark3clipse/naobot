@@ -29,6 +29,7 @@ state = STATE_SCANFACE;
 
 #general constants
 c_personal_space_distance = 1
+#hello I write something here
 
 #global variables
 nav_position = np.array([0, 0]) #position to navigate to
