@@ -9,10 +9,12 @@ import pykalman as klib
 import numpy as np
 from cmath import *
 import time
+import random
+import naoqi
 
 #initialize the robot
-nao.InitProxy("127.0.0.1", [])
-nao.InitPose(.5, .8)
+myIP = "192.168.0.115"
+nao.InitProxy(myIP, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11])
 
 #possible states
 STATE_SCANFACE = 0
@@ -34,18 +36,70 @@ nav_angle = 0
 nav_personal = False
 waiting_area = 0
 
+nao.Say("Program Started")
+
 while(True):
     if state == STATE_SCANFACE:
         #Start the face detection
-        [detected, timestamp, facePosition] = nao.DetectFace(True, 100)
-        if detected == True:
-            print("Face detected at t="+timestamp+", position"+facePosition)
-            
-            #nao.MoveHead(yaw_val, pitch_val, isAbsolute, post, timeLists)
-            #nav_position = 
-            #nav_angle = 
-            nav_personal = True
-            state = STATE_NAVIGATE
+        print("STATE: scan face")
+        try:
+            nao.Crouch(.8)
+            nao.InitTrack()
+            nao.InitSpeech(wordList=["yes","no"], the_language="English", wordSpotting=False)
+        
+            track_count = 0
+            count=0
+            said = False
+            while(track_count < 1500 and state == STATE_SCANFACE):
+                location, detected = nao.ALFacePosition()
+                if detected:
+                    nao.EyeLED([0,255,0])
+                    nao.Track(location, detected, 5, 0.02)
+                    if count>50 and said == False:
+                        txt = ["Do you need any assistance?", "Would you like me to assist you?", "Would you like assistance?", "Do you need any help?"]
+                        nao.Say(txt[random.randint(0, 3)])
+                        speech_count = 0
+                        nao.InitSoundDetection(True)
+                        nao.EyeLED([255,128,0])
+                        asr = naoqi.ALProxy("ALSpeechRecognition", myIP, 9559)
+                        asr.subscribe("REC")
+                        while(speech_count < 500):
+                            
+                            result = nao.DetectSpeech()
+                            print(result)
+                            if (len(result) > 0):
+                                if (result[0] == "yes"):
+                                    nao.Say("Please follow me.")
+                                    state = STATE_FINDREASON
+                                    break
+                                elif (result[0] == "no"):
+                                    nao.Say("Help yourself then")
+                                    break
+                                else:
+                                    nao.Say("I could not hear you.")
+                            speech_count+=1
+                        nao.InitSoundDetection(False)
+                        asr.unsubscribe("REC")
+                        if (speech_count < 500):
+                            said = True
+                        count=0
+                    else:
+                        count=count+1
+                else:
+                    nao.EyeLED([255,0,0])
+                    #nao.Track([0, 0], detected,5,0.02)
+                track_count += 1
+                
+        except Exception, e:
+            print "exception ", e
+            nao.Say("Your program is malfunctioning.")
+
+        finally:
+            nao.EndTrack()
+            nao.EyeLED([0,0,255])
+            nao.MoveHead(0, 0, False)
+            nao.Say("Back to sleep")
+            break
         pass
     
     elif state == STATE_NAVIGATE:

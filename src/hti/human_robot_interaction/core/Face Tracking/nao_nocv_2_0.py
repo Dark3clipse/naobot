@@ -1274,7 +1274,7 @@ def InitSpeech(wordList=["yes","no","hello NAO","goodbye NAO"],the_language="Eng
     
     #Creating a proxy on the module
     #Before calling the ASR commands, you need to create a proxy on the ASR module:
-    #asr = ALProxy("ALSpeechRecognition",myIP,9559) #IP = address of your robot
+#    asr = ALProxy("ALSpeechRecognition",myIP,9559) #IP = address of your robot
     #asr=speechProxy
     
     #Before starting the ASR engine, you must set the language of the speech recognition system. The list of the installed languages can be obtained through the getAvailableLanguages method.
