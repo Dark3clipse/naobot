@@ -4,13 +4,15 @@ Created on 24 Apr 2018
 @author: Sophia
 '''
 import nao_nocv_2_0 as nao
-import pykalman as klib
-import numpy as np
-from cmath import *
+import naoqi
+#import pykalman as klib
+#import numpy as np
+#from cmath import *
 import time
 import navigate as n
 
 #initialize the robot
+<<<<<<< HEAD
 nao_ip = "127.0.0.1"
 #nao_ip = "192.168.0.115"
 nao.InitProxy(nao_ip)
@@ -19,6 +21,10 @@ nao.InitSonar()
 nao.InitTrack()
 nao.InitPose()
 nao.EndTrack()
+=======
+nao.InitProxy("127.0.0.1", [])
+nao.InitPose(.5, .8)
+>>>>>>> 09ef8244968df731f2e06e2d707df346771a447a
 
 #possible states
 STATE_SCANFACE = 0
@@ -29,20 +35,52 @@ STATE_FINDREASON = 4
 STATE_ARRIVEDATDESTINATION = 5
 
 #holds the current state
-state = STATE_SCANFACE;
+state = STATE_FIRSTCONTACT_ATTENTION;
 
 #general constants
 c_personal_space_distance = 1
-#hello I write something here
+
 
 #global variables
-nav_position = np.array([0, 0]) #position to navigate to
+#nav_position = np.array([0, 0]) #position to navigate to
 nav_angle = 0
 nav_personal = False
 waiting_area = 0
+go = True
 
-while(True):
+def getAttention():
+    nao.InitPose()
+    nao.Say("Hello")
+    nao.RunMovement("/gestures/Welcoming.py")
+    #nao.Crouch()
+    #time.sleep(1)
+
+def firstContact():
+    nao.Say("Can I help you?")
+    answer = detectSpeech()
+    if answer == "yes":
+        state = STATE_FINDREASON
+    elif:
+        #state = STATE_NAVIGATE(start position)
+
+def detectSpeech():
+    #blablabla
+
+while(go == True):
     if state == STATE_SCANFACE:
+<<<<<<< HEAD
+=======
+        #Start the face detection
+        [detected, timestamp, facePosition] = nao.DetectFace(True, 100)
+        if detected == True:
+            print("Face detected at t="+timestamp+", position"+facePosition)
+            
+            #nao.MoveHead(yaw_val, pitch_val, isAbsolute, post, timeLists)
+            #nav_position = 
+            #nav_angle = 
+            nav_personal = True
+            state = STATE_NAVIGATE
+>>>>>>> 09ef8244968df731f2e06e2d707df346771a447a
         pass
     
     elif state == STATE_NAVIGATE:
@@ -50,11 +88,13 @@ while(True):
         pass
     
     elif state == STATE_FIRSTCONTACT_ATTENTION:
-        
+        getAttention()
+        #state_scanface; if face is seen --> state = STATE_FIRSTCONTACT_SENTENCE
+        go = False
         pass
     
     elif state == STATE_FIRSTCONTACT_SENTENCE:
-        
+        firstContact()
         pass
     
     elif state == STATE_FINDREASON:
