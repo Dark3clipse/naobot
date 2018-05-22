@@ -8,9 +8,17 @@ import pykalman as klib
 import numpy as np
 from cmath import *
 import time
+import navigate as n
 
 #initialize the robot
-nao.InitProxy("127.0.0.1")
+nao_ip = "127.0.0.1"
+#nao_ip = "192.168.0.115"
+nao.InitProxy(nao_ip)
+nao.InitSonar()
+#nao.InitLandMark()
+nao.InitTrack()
+nao.InitPose()
+nao.EndTrack()
 
 #possible states
 STATE_SCANFACE = 0
@@ -35,11 +43,10 @@ waiting_area = 0
 
 while(True):
     if state == STATE_SCANFACE:
-        
         pass
     
     elif state == STATE_NAVIGATE:
-        
+        state = n.navigate()
         pass
     
     elif state == STATE_FIRSTCONTACT_ATTENTION:
