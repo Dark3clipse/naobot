@@ -3,7 +3,6 @@ Created on 24 Apr 2018
 
 @author: Sophia
 '''
-#does it work
 import nao_nocv_2_0 as nao
 import pykalman as klib
 import numpy as np
