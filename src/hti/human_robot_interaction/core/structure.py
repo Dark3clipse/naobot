@@ -12,6 +12,7 @@ import time
 
 #initialize the robot
 nao.InitProxy("127.0.0.1")
+nao.InitPose(.5, .8)
 
 #possible states
 STATE_SCANFACE = 0
@@ -35,7 +36,7 @@ waiting_area = 0
 
 while(True):
     if state == STATE_SCANFACE:
-        
+        #i have changed something
         pass
     
     elif state == STATE_NAVIGATE:
